@@ -1,5 +1,5 @@
 package project2ia;
 
-public class Vista {
+public class View {
     
 }
