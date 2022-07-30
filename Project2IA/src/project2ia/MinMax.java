@@ -35,8 +35,55 @@ public class MinMax {
     }
     
     public Node minMaxDecision() {
+        this.buildTree();
+        this.calculateInitialHerusticDeepestNodes();
+        this.caculateHeuristicRestNodes();
         Node decision = this.max(this.root.getChildren());
         return decision;
+    }
+    
+    public void buildTree() {
+        int position = 0;
+        
+        while(this.tree.get(position).getDepth() < this.maxDepth) {
+            Vector<Node> children;
+            if(this.tree.get(position).getDepth() % 2 == 0)
+                children = this.tree.get(position).possibleMoves(TypePlayer.MACHINE);
+            else
+                children = this.tree.get(position).possibleMoves(TypePlayer.USER);
+            
+            for(int i = 0; i < children.size() ; i++) {
+                tree.add(children.get(i));
+            }
+            position+=1;
+        }
+    }
+    
+    public void calculateInitialHerusticDeepestNodes() {
+        for (int position = 0; position < this.tree.size() ; position++) {
+            if(this.tree.get(position).getDepth() == this.maxDepth) {
+                this.tree.get(position).setHeuristic(this.tree.get(position).getMachinePoints() - this.tree.get(position).getHumanPoints());
+                this.tree.get(position).getFather().getChildren().add(this.tree.get(position));
+            }
+        }
+    }
+    
+    public void caculateHeuristicRestNodes() {
+        int currentDepth = this.maxDepth - 1;
+        while (currentDepth > 0) {
+            for (int position = 0; position < this.tree.size(); position++) {
+                if(this.tree.get(position).getDepth() == currentDepth) {
+                    if(this.tree.get(position).getType().equals(TypeNodeMinMax.MIN)) {
+                        this.tree.get(position).getFather().getChildren().add(this.tree.get(position));
+                        this.tree.get(position).setHeuristic(this.min(this.tree.get(position).getChildren()).getHeuristic());
+                    } else if(this.tree.get(position).getType().equals(TypeNodeMinMax.MAX)) {
+                        this.tree.get(position).getFather().getChildren().add(this.tree.get(position));
+                        this.tree.get(position).setHeuristic(this.max(this.tree.get(position).getChildren()).getHeuristic());
+                    }
+                }
+            }
+            currentDepth-=1;
+        }
     }
 
     public Coordinate move() {

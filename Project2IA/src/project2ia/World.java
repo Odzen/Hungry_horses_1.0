@@ -8,12 +8,18 @@ package project2ia;
 5 -> Apple
 */
 public class World {
-
-    private int width = 0;
-    private int height = 0;
+    
+    static final int QTY_GRASS = 14;
+    static final int QTY_FLOWERS = 5;
+    static final int QTY_APPLES = 2;
+    
+    private int totalQtyItems;
+    private int width;
+    private int height;
     private int[][] matrix;
 
     public World(int width, int height) {
+        this.totalQtyItems = QTY_GRASS + QTY_FLOWERS + QTY_APPLES;
         this.width = width;
         this.height = height;
         this.matrix = new int[width][height];
@@ -42,6 +48,16 @@ public class World {
     public void setMatrix(int[][] matrix) {
         this.matrix = matrix;
     }
+
+    public int getTotalQtyItems() {
+        return totalQtyItems;
+    }
+
+    public void setTotalQtyItems(int totalQtyItems) {
+        this.totalQtyItems = totalQtyItems;
+    }
+    
+    
     
     //public World randomWorld() {}
     
