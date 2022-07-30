@@ -131,8 +131,7 @@ public class World {
                 this.matrix[blackHorseX][blackHorseY] = 1;
                 isMissingBlackHorse = false;
             }
-        }
-                  
+        }                  
     }
 
     // Cosindering that 1 -> Player horse, and 2 -> Machine horse
