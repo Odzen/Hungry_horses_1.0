@@ -11,12 +11,12 @@ public class World {
 
     private int width = 0;
     private int height = 0;
-    private int[][] world;
+    private int[][] matrix;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.world = new int[width][height];
+        this.matrix = new int[width][height];
     }
 
     public int getWidth() {
@@ -35,26 +35,26 @@ public class World {
         this.height = height;
     }
 
-    public int[][] getWorld() {
-        return world;
+    public int[][] getMatrix() {
+        return matrix;
     }
 
-    public void setWorld(int[][] newWorld) {
-        this.world = newWorld;
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
     }
     
     //public World randomWorld() {}
     
     // Cosindering that 1 -> Player horse, and 2 -> Machine horse
     public boolean isThereAnyHorse(int x, int y) {
-        if(this.getWorld()[x][y] == 1 || this.getWorld()[x][y] == 2)
+        if(this.getMatrix()[x][y] == 1 || this.getMatrix()[x][y] == 2)
             return true;
         else
             return false;
     }
 
     public void printWorld() {
-        for (int[] x : this.world) {
+        for (int[] x : this.matrix) {
             for (int y : x) {
                 System.out.print(y + " ");
             }

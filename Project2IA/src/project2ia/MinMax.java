@@ -42,9 +42,9 @@ public class MinMax {
     public Coordinate move() {
         Node nodeMove = minMaxDecision();
         Coordinate coordinateAfterMove = new Coordinate();
-        for (int i = 0; i < nodeMove.getWorld().getWorld().length; i++) {
-            for (int j = 0; j < nodeMove.getWorld().getWorld()[i].length; j++) {
-                if (nodeMove.getWorld().getWorld()[i][j] == 2) {
+        for (int i = 0; i < nodeMove.getWorld().getMatrix().length; i++) {
+            for (int j = 0; j < nodeMove.getWorld().getMatrix()[i].length; j++) {
+                if (nodeMove.getWorld().getMatrix()[i][j] == 2) {
                     coordinateAfterMove.setX(i);
                     coordinateAfterMove.setY(j);
                 }
