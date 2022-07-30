@@ -4,29 +4,47 @@ import java.util.Vector;
 
 public class Node {
     
-    private String type;
+    private TypeNodeMinMax type;
     private int depth;
-    private int utility;
+    private int heuristic;
     private int machinePoints;
     private int humanPoints;
     private Node father;
     private World world;
-    private Vector<Node> options = new Vector();
+    private Vector<Node> children = new Vector();
     
     public Node() {
-        this.type = "";
+        this.type = TypeNodeMinMax.UNDEFINED;
         this.depth = 0;
-        this.utility = 0;
+        this.heuristic = 0;
         this.machinePoints = 0;
         this.humanPoints = 0;
         this.world = new World(8,8);
     }
+    
+    public Node addChild(int x, int y, TypePlayer playerType, Node fatherNode) {
+        Node childNode = new Node();
+        childNode.setWorld(fatherNode.getWorld());
+        childNode.setFather(fatherNode);
+        childNode.setHumanPoints(fatherNode.getHumanPoints());
+        childNode.setMachinePoints(fatherNode.getMachinePoints());
+        
+        int caballo;
+        if(playerType.equals(TypePlayer.USER)) {
+            caballo = 1;
+        }
+        else if(playerType.equals(TypePlayer.MACHINE)) {
+            caballo = 2;
+        }
+        
+        return childNode;
+    }
 
-    public String getType() {
+    public TypeNodeMinMax getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TypeNodeMinMax type) {
         this.type = type;
     }
 
@@ -38,12 +56,12 @@ public class Node {
         this.depth = depth;
     }
 
-    public int getUtility() {
-        return utility;
+    public int getHeuristic() {
+        return heuristic;
     }
 
-    public void setUtility(int utility) {
-        this.utility = utility;
+    public void setHeuristic(int points) {
+        this.heuristic = points;
     }
 
     public int getMachinePoints() {
@@ -62,12 +80,12 @@ public class Node {
         this.humanPoints = humanPoints;
     }
 
-    public Vector<Node> getOptions() {
-        return options;
+    public Vector<Node> getChildren() {
+        return children;
     }
 
-    public void setOptions(Vector<Node> options) {
-        this.options = options;
+    public void setChildren(Vector<Node> children) {
+        this.children = children;
     }
     
     public void setFather(Node father){

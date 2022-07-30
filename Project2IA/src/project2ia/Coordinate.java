@@ -2,8 +2,8 @@ package project2ia;
 
 public class Coordinate {
     
-    public int x;
-    public int y;
+    private int x;
+    private int y;
     
     public Coordinate() { 
     }

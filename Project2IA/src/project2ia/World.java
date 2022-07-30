@@ -1,5 +1,12 @@
 package project2ia;
 
+/*
+1 -> Player 1 = User
+2 -> Player 2 = Machine
+3 -> Flower
+4 -> Grass
+5 -> Apple
+*/
 public class World {
 
     private int width = 0;
@@ -32,16 +39,18 @@ public class World {
         return world;
     }
 
-    public void setWorld(int[][] world) {
-        this.world = world;
+    public void setWorld(int[][] newWorld) {
+        this.world = newWorld;
     }
-
-    public void setWorld(World newWorld) {
-        for (int i = 0; i < newWorld.getWorld().length; i++) {
-            for (int j = 0; j < newWorld.getWorld()[i].length; j++) {
-                this.world[i][j] = newWorld.getWorld()[i][j];
-            }
-        }
+    
+    //public World randomWorld() {}
+    
+    // Cosindering that 1 -> Player horse, and 2 -> Machine horse
+    public boolean isThereAnyHorse(int x, int y) {
+        if(this.getWorld()[x][y] == 1 || this.getWorld()[x][y] == 2)
+            return true;
+        else
+            return false;
     }
 
     public void printWorld() {
@@ -52,5 +61,4 @@ public class World {
             System.out.println();
         }
     }
-
 }
