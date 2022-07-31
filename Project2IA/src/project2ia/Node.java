@@ -83,13 +83,16 @@ public class Node {
 
     public Vector<Node> possibleMoves(TypePlayer playerType) {
         Coordinate playerPosition = new Coordinate();
-
+        System.out.println("Possible Moves Machine");
+        this.getWorld().printWorld();
+        
         if (playerType.equals(TypePlayer.USER)) {
             for (int i = 0; i < this.getWorld().getWidth(); i++) {
                 for (int j = 0; j < this.getWorld().getHeight(); j++) {
                     if (this.getWorld().getMatrix()[i][j] == 1) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
+                        System.out.println("USER:" + i +","+ j);
                     }
                 }
             }
@@ -99,6 +102,7 @@ public class Node {
                     if (this.getWorld().getMatrix()[i][j] == 2) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
+                        System.out.println("MACHINE:" + i +","+ j);
                     }
                 }
             }
@@ -113,7 +117,7 @@ public class Node {
         int oneStepRight = playerPosition.getX() + 1;
         int oneStepDown = playerPosition.getY() + 1;
         int oneStepUp = playerPosition.getY() - 1;
-        int oneStepLeft = playerPosition.getY() - 1;
+        int oneStepLeft = playerPosition.getX() - 1;
 
         if (twoStepsRight < this.getWorld().getWidth() && oneStepUp >= 0 && (this.getWorld().isThereAnyHorse(twoStepsRight, oneStepUp) == false)) {
             possibleMoves.add(this.addChild(twoStepsRight, oneStepUp, playerType));
@@ -153,7 +157,7 @@ public class Node {
     }
 
     public int getDepth() {
-        return depth;
+        return this.depth;
     }
 
     public void setDepth(int depth) {
@@ -161,7 +165,7 @@ public class Node {
     }
 
     public int getHeuristic() {
-        return heuristic;
+        return this.heuristic;
     }
 
     public void setHeuristic(int heuristic) {
@@ -177,7 +181,7 @@ public class Node {
     }
 
     public int getHumanPoints() {
-        return humanPoints;
+        return this.humanPoints;
     }
 
     public void setHumanPoints(int humanPoints) {
@@ -197,14 +201,14 @@ public class Node {
     }
 
     public Node getFather() {
-        return father;
+        return this.father;
     }
 
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     public void setWorld(World newWorld) {
-        this.world = world;
+        this.world = newWorld;
     }
 }

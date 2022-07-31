@@ -185,6 +185,8 @@ public class View extends javax.swing.JFrame {
         rootNode.setHumanPoints(this.userPoints);
         rootNode.setMachinePoints(this.machinePoints);
         rootNode.setWorld(this.world);
+        System.out.println("World before sending to Node: ");
+        this.world.printWorld();
         
         MinMax minMax = new MinMax(rootNode, this.maxDepthSetByUser);
         
