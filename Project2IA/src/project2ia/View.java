@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 public class View extends javax.swing.JFrame {
     private GridLayout layout;
@@ -13,11 +15,15 @@ public class View extends javax.swing.JFrame {
     private int columns;
     private World world;
     private Vector<JButton> buttonsVector = new Vector();
+    private int userPoints;
+    private int machinePoints;
 
     public View() {
         initComponents();
         this.rows = 8;
         this.columns = 8;
+        this.userPoints = 0;
+        this.machinePoints = 0;
         this.levelComboBox.addItem("Begineer");
         this.levelComboBox.addItem("Amateur");
         this.levelComboBox.addItem("Expert");
@@ -37,7 +43,7 @@ public class View extends javax.swing.JFrame {
                 JButton newButton = new JButton();
                 newButton.setEnabled(false);
                 
-                String buttonName = id+" ";
+                String buttonName = id+"";
                 newButton.setActionCommand(buttonName);
                 newButton.setBackground(Color.WHITE);
                 
@@ -48,7 +54,7 @@ public class View extends javax.swing.JFrame {
                 });
                 this.dashboardPanel.add(newButton);
                 this.buttonsVector.add(newButton);
-                id += 1;
+                id++;
                 
             }
         }
@@ -58,11 +64,130 @@ public class View extends javax.swing.JFrame {
     }
     
     public void showWorld(World world) { 
-        return;
+        int positionButton = 0;
+        for (int row = 0; row < world.getMatrix().length; row ++) {
+            for(int column = 0; column < world.getMatrix()[row].length; column++) {
+                buttonsVector.get(positionButton).setIcon(this.paintElements(world.getMatrix()[row][column]));
+                buttonsVector.get(positionButton).setDisabledIcon(this.paintElements(world.getMatrix()[row][column]));
+                positionButton++;
+            }
+        }
     }
     
+    public ImageIcon paintElements(int element) {
+        switch (element) {
+            case 0:
+                ImageIcon blankSpace = new ImageIcon(getClass().getResource("images\\vacio.gif"));
+                return blankSpace;
+            case 1:
+                ImageIcon userBlackHorse = new ImageIcon(getClass().getResource("images\\bush.gif"));
+                return userBlackHorse;
+            case 2:
+                ImageIcon machineWhiteHorse = new ImageIcon(getClass().getResource("images\\blueKnight.gif"));
+                return machineWhiteHorse;
+            case 3:
+                ImageIcon flower = new ImageIcon(getClass().getResource("images\\flower.gif"));
+                return flower;
+            case 4:
+                ImageIcon grass = new ImageIcon(getClass().getResource("images\\redKnight.gif"));
+                return grass;
+            case 5:
+                ImageIcon apple = new ImageIcon(getClass().getResource("images\\redKnight.gif"));
+                return apple;
+            default:
+                ImageIcon blankSpaceDefault = new ImageIcon(getClass().getResource("images\\bush.gif"));
+                return blankSpaceDefault;
+        }
+    }
+    
+    public void setPointsByButtonPosition(int buttonPositionWorld) {
+        // If the next button is a flower
+        if(buttonPositionWorld == 3) {
+            this.userPoints += 3;
+        }
+        // If the next button is grass
+        if(buttonPositionWorld == 4) {
+            this.userPoints ++;
+        }
+        // If the next button is an apple
+        if(buttonPositionWorld == 5) {
+            this.userPoints += 5;
+        }
+        this.humanPointsLabel.setText(this.userPoints+"");
+    }
+    
+    public void deactivateButtons() {
+        for(int button = 0; button < this.buttonsVector.size(); button++){
+            this.buttonsVector.get(button).setEnabled(false);
+        }
+    }
+    
+    // Checks if the game isn't over yet. The game is still on, while any items still left in the world
+    // If not, there is no move to make for any of the players
+    public boolean areStillAnyItemsInWorld() {
+        boolean itemsInWorld = false;
+        for(int row = 0; row < this.world.getWidth(); row++) {
+            for(int column = 0; column < this.world.getHeight(); column++) {
+                if(this.world.getMatrix()[row][column] == 3 || this.world.getMatrix()[row][column] == 4 || this.world.getMatrix()[row][column] == 5)
+                    itemsInWorld = true;
+            }
+        }
+        return itemsInWorld;
+    }
+    
+    public void whoWon() {
+        if(this.machinePoints > this.userPoints) 
+            JOptionPane.showMessageDialog(this, "WINNER: Machine");
+        else if(this.userPoints > this.machinePoints)
+            JOptionPane.showMessageDialog(this, "WINNER: User");
+        else if(this.userPoints == this.machinePoints)
+            JOptionPane.showMessageDialog(this, "TIE: There is no winner");
+        
+        this.startGameButton.setText("Play Again");
+        this.startGameButton.setEnabled(true);
+    }
+    
+    
     private void buttonDashboardAction(ActionEvent event) {
-        return;
+        Coordinate buttonCoordinate = new Coordinate();
+        
+        int buttonId = Integer.parseInt(event.getActionCommand());
+        int iteratorButtonId = 0;
+        
+        // Finds the coordinate of that specif button when the action is performed
+        for (int row = 0; row < this.world.getWidth(); row++) {
+            for (int column = 0; column < this.world.getHeight(); column++) {
+                if(iteratorButtonId == buttonId) {
+                    buttonCoordinate.setX(row);
+                    buttonCoordinate.setY(column);
+                }
+                iteratorButtonId++;
+            }
+        }
+        
+        // Set points according to the button where the user player wants to move next
+        this.setPointsByButtonPosition(this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()]);
+                
+        // Finds the current user-player coordinate in the world, to then, set it
+        Coordinate userPosition = new Coordinate();
+        for (int row = 0; row < this.world.getWidth(); row++) {
+            for (int column = 0; column < this.world.getHeight(); column++) {
+                if(this.world.getMatrix()[row][column] == 1) {
+                    userPosition.setX(row);
+                    userPosition.setY(column);
+                }
+            }
+        }
+        
+        // Show moves in the view, sets the previous user position to 0
+        // And the new position to 1 which represents the user
+        this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()] = 4;
+        this.world.getMatrix()[userPosition.getX()][userPosition.getY()] = 0;
+        
+        // Deactivate all buttons
+        this.deactivateButtons();
+        
+        // Check if someone won, if not, let the machine play
     }
 
     /**
@@ -275,43 +400,11 @@ public class View extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void levelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_levelComboBoxActionPerformed
-        /*if(comboNivel.getSelectedItem()=="No informada"){
-            comboAlgoritmo.removeAllItems();
-            comboAlgoritmo.addItem("Amplitud");
-            comboAlgoritmo.addItem("Costo uniforme");
-            comboAlgoritmo.addItem("Profundidad");
-        }else{
-            comboAlgoritmo.removeAllItems();
-            comboAlgoritmo.addItem("Avara");
-            comboAlgoritmo.addItem("A*");
-        }*/
+         // TODO add your handling code here:
     }//GEN-LAST:event_levelComboBoxActionPerformed
 
     private void startGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameButtonActionPerformed
-
-        if(startGameButton.getText()=="Volver a Jugar"){
-            matrizRandom();
-            mostrar(miMatriz);
-            puntajeHumano=0;
-            puntajeMaquina=0;
-            machinePointsLabel.setText("0");
-            humanPointsLabel.setText("0");
-            startGameButton.setText("Iniciar Juego");
-            levelComboBox.setEnabled(true);
-        }else{
-            if (levelComboBox.getSelectedItem() == "Principiante") {
-                profundidadArbol = 2;
-                turnoMaquina();
-            } else if (levelComboBox.getSelectedItem() == "Amateur") {
-                profundidadArbol = 4;
-                turnoMaquina();
-            } else if (levelComboBox.getSelectedItem() == "Experto") {
-                profundidadArbol = 6;
-                turnoMaquina();
-            }
-            levelComboBox.setEnabled(false);
-            startGameButton.setEnabled(false);
-        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_startGameButtonActionPerformed
 
     private void humanPointsLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_humanPointsLabelActionPerformed
