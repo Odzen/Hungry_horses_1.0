@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class View extends javax.swing.JFrame {
     private GridLayout layout;
@@ -17,6 +19,7 @@ public class View extends javax.swing.JFrame {
     private Vector<JButton> buttonsVector = new Vector();
     private int userPoints;
     private int machinePoints;
+    private int maxDepthSetByUser;
 
     public View() {
         initComponents();
@@ -24,6 +27,7 @@ public class View extends javax.swing.JFrame {
         this.columns = 8;
         this.userPoints = 0;
         this.machinePoints = 0;
+        this.maxDepthSetByUser = 0;
         this.levelComboBox.addItem("Begineer");
         this.levelComboBox.addItem("Amateur");
         this.levelComboBox.addItem("Expert");
@@ -100,20 +104,30 @@ public class View extends javax.swing.JFrame {
         }
     }
     
-    public void setPointsByButtonPosition(int buttonPositionWorld) {
+    public void setPointsByPosition(int buttonPositionWorld, TypePlayer playerType) {
         // If the next button is a flower
         if(buttonPositionWorld == 3) {
-            this.userPoints += 3;
+            if(playerType.equals(TypePlayer.MACHINE))
+                this.machinePoints += 3;
+            else
+                this.userPoints += 3;
         }
         // If the next button is grass
         if(buttonPositionWorld == 4) {
-            this.userPoints ++;
+            if(playerType.equals(TypePlayer.MACHINE))
+                this.machinePoints ++;
+            else
+                this.userPoints ++;
         }
         // If the next button is an apple
         if(buttonPositionWorld == 5) {
-            this.userPoints += 5;
+            if(playerType.equals(TypePlayer.MACHINE))
+                this.machinePoints += 5;
+            else
+                this.userPoints += 5;
         }
         this.humanPointsLabel.setText(this.userPoints+"");
+        this.machinePointsLabel.setText(this.machinePoints+"");
     }
     
     public void deactivateButtons() {
@@ -147,14 +161,129 @@ public class View extends javax.swing.JFrame {
         this.startGameButton.setEnabled(true);
     }
     
+    public void activateButtonsForPossibleMoves(Vector<Coordinate> possibleMoves) {
+        int buttonId = 0;
+        for(int move = 0; move < possibleMoves.size(); move++) {
+            for(int row = 0; row < this.world.getWidth(); row++) {
+                for(int column = 0; column < this.world.getHeight(); column++) {
+                    if(possibleMoves.get(move).getX() == row && possibleMoves.get(move).getY() == column)
+                        this.dashboardPanel.getComponent(buttonId).setEnabled(true);
+                    buttonId++;
+                }
+            }
+        }
+    }
     
+    public void userCheckMoves() {
+        Vector<Coordinate> userPossibleMoves = this.possibleMovesUser();
+        this.activateButtonsForPossibleMoves(userPossibleMoves);
+    }
+    
+    
+    public void machineMove() {
+        Node rootNode = new Node();
+        rootNode.setHumanPoints(this.userPoints);
+        rootNode.setMachinePoints(this.machinePoints);
+        rootNode.setWorld(this.world);
+        
+        MinMax minMax = new MinMax(rootNode, this.maxDepthSetByUser);
+        
+        // Next move
+        Coordinate coordinateMachineMove = minMax.move();
+        
+        // Finds the current machine-player coordinate in the world, to then, set it
+        Coordinate machinePosition = new Coordinate();
+        for (int row = 0; row < this.world.getWidth(); row++) {
+            for (int column = 0; column < this.world.getHeight(); column++) {
+                if(this.world.getMatrix()[row][column] == 2) {
+                    machinePosition.setX(row);
+                    machinePosition.setY(column);
+                }
+            }
+        }
+        
+        // Set points according to the next position where the machine player wants to move next
+        this.setPointsByPosition(this.world.getMatrix()[coordinateMachineMove.getX()][coordinateMachineMove.getY()] , TypePlayer.MACHINE);
+        
+        // Set positions next move and previous position
+        this.world.getMatrix()[coordinateMachineMove.getX()][coordinateMachineMove.getY()] = 2;
+        this.world.getMatrix()[machinePosition.getX()][machinePosition.getY()] = 0;
+        
+        this.showWorld(this.world);
+        
+        if(!this.areStillAnyItemsInWorld())
+            this.whoWon();
+        else
+            this.possibleMovesUser();
+    }
+    
+    public Vector<Coordinate> possibleMovesUser() {
+        Coordinate userPosition = new Coordinate();
+
+        for (int row = 0; row < this.world.getWidth(); row++) {
+            for (int column = 0; column < this.world.getHeight(); column++) {
+                if (this.world.getMatrix()[row][column] == 1) {
+                    userPosition.setX(row);
+                    userPosition.setY(column);
+                }
+            }
+        }
+        
+        Vector<Coordinate> userPossibleMoves = new Vector();
+
+        int twoStepsRight = userPosition.getX() + 2;
+        int twoStepsDown = userPosition.getY() + 2;
+        int twoStepsUp = userPosition.getY() - 2;
+        int twoStepsLeft = userPosition.getX() - 2;
+        int oneStepRight = userPosition.getX() + 1;
+        int oneStepDown = userPosition.getY() + 1;
+        int oneStepUp = userPosition.getY() - 1;
+        int oneStepLeft = userPosition.getY() - 1;
+
+        if (twoStepsRight < this.world.getWidth() && oneStepUp >= 0 && (this.world.isThereAnyHorse(twoStepsRight, oneStepUp) == false)) {
+            Coordinate twoRightOneUp = new Coordinate(twoStepsRight, oneStepUp);
+            userPossibleMoves.add(twoRightOneUp);
+        }
+        if (twoStepsRight < this.world.getWidth() && oneStepDown < this.world.getHeight() && (this.world.isThereAnyHorse(twoStepsRight, oneStepDown) == false)) {
+            Coordinate twoRightOneDown = new Coordinate(twoStepsRight, oneStepDown);
+            userPossibleMoves.add(twoRightOneDown);
+        }
+        if (twoStepsDown < this.world.getHeight() && oneStepLeft >= 0 && (this.world.isThereAnyHorse(oneStepLeft, twoStepsDown) == false)) {
+            Coordinate oneLeftTwoDown = new Coordinate(oneStepLeft, twoStepsDown);
+            userPossibleMoves.add(oneLeftTwoDown);
+        }
+        if (twoStepsDown < this.world.getHeight() && oneStepRight < this.world.getWidth() && (this.world.isThereAnyHorse(oneStepRight, twoStepsDown) == false)) {
+            Coordinate oneRightTwoDown = new Coordinate(oneStepRight, twoStepsDown);
+            userPossibleMoves.add(oneRightTwoDown);
+        }
+        if (twoStepsUp >= 0 && oneStepLeft >= 0 && (this.world.isThereAnyHorse(oneStepLeft, twoStepsUp) == false)) {
+            Coordinate oneLeftTwoUp = new Coordinate(oneStepLeft, twoStepsUp);
+            userPossibleMoves.add(oneLeftTwoUp);
+        }
+        if (twoStepsUp >= 0 && oneStepRight < this.world.getWidth() && (this.world.isThereAnyHorse(oneStepRight, twoStepsUp) == false)) {
+            Coordinate oneRigthTwoUp = new Coordinate(oneStepRight, twoStepsUp);
+            userPossibleMoves.add(oneRigthTwoUp);
+        }
+        if (twoStepsLeft >= 0 && oneStepUp >= 0 && (this.world.isThereAnyHorse(twoStepsLeft, oneStepUp) == false)) {
+            Coordinate twoLeftOneUp = new Coordinate(twoStepsLeft, oneStepUp);
+            userPossibleMoves.add(twoLeftOneUp);
+        }
+        if (twoStepsLeft >= 0 && oneStepDown < this.world.getHeight() && (this.world.isThereAnyHorse(twoStepsLeft, oneStepDown) == false)) {
+            Coordinate twoLeftOneDown = new Coordinate(twoStepsLeft, oneStepDown);
+            userPossibleMoves.add(twoLeftOneDown);
+        }
+        
+        return userPossibleMoves;
+
+    }
+   
     private void buttonDashboardAction(ActionEvent event) {
         Coordinate buttonCoordinate = new Coordinate();
         
         int buttonId = Integer.parseInt(event.getActionCommand());
         int iteratorButtonId = 0;
         
-        // Finds the coordinate of that specif button when the action is performed
+        // Finds the coordinate of that specific button when the action is performed
         for (int row = 0; row < this.world.getWidth(); row++) {
             for (int column = 0; column < this.world.getHeight(); column++) {
                 if(iteratorButtonId == buttonId) {
@@ -166,7 +295,7 @@ public class View extends javax.swing.JFrame {
         }
         
         // Set points according to the button where the user player wants to move next
-        this.setPointsByButtonPosition(this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()]);
+        this.setPointsByPosition(this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()], TypePlayer.USER);
                 
         // Finds the current user-player coordinate in the world, to then, set it
         Coordinate userPosition = new Coordinate();
@@ -181,13 +310,29 @@ public class View extends javax.swing.JFrame {
         
         // Show moves in the view, sets the previous user position to 0
         // And the new position to 1 which represents the user
-        this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()] = 4;
+        this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()] = 1;
         this.world.getMatrix()[userPosition.getX()][userPosition.getY()] = 0;
         
         // Deactivate all buttons
         this.deactivateButtons();
         
         // Check if someone won, if not, let the machine play
+        if(!this.areStillAnyItemsInWorld())
+            this.whoWon();
+        else {
+            Thread threadMachine = new Thread() {
+                public void run() {  
+                    try {
+                        sleep(1500);
+                        // machinePlays
+                    } catch(InterruptedException ex) {
+                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            };
+            threadMachine.start();
+        }
+            
     }
 
     /**
