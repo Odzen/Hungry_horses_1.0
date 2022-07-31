@@ -81,25 +81,25 @@ public class View extends javax.swing.JFrame {
     public ImageIcon paintElements(int element) {
         switch (element) {
             case 0:
-                ImageIcon blankSpace = new ImageIcon(getClass().getResource("images\\vacio.gif"));
+                ImageIcon blankSpace = new ImageIcon(getClass().getResource("images\\empty.gif"));
                 return blankSpace;
             case 1:
-                ImageIcon userBlackHorse = new ImageIcon(getClass().getResource("images\\bush.gif"));
+                ImageIcon userBlackHorse = new ImageIcon(getClass().getResource("images\\blackHorse.png"));
                 return userBlackHorse;
             case 2:
-                ImageIcon machineWhiteHorse = new ImageIcon(getClass().getResource("images\\blueKnight.gif"));
+                ImageIcon machineWhiteHorse = new ImageIcon(getClass().getResource("images\\whiteHorse.png"));
                 return machineWhiteHorse;
             case 3:
-                ImageIcon flower = new ImageIcon(getClass().getResource("images\\flower.gif"));
+                ImageIcon flower = new ImageIcon(getClass().getResource("images\\flower.png"));
                 return flower;
             case 4:
-                ImageIcon grass = new ImageIcon(getClass().getResource("images\\redKnight.gif"));
+                ImageIcon grass = new ImageIcon(getClass().getResource("images\\grass.png"));
                 return grass;
             case 5:
-                ImageIcon apple = new ImageIcon(getClass().getResource("images\\redKnight.gif"));
+                ImageIcon apple = new ImageIcon(getClass().getResource("images\\apple.png"));
                 return apple;
             default:
-                ImageIcon blankSpaceDefault = new ImageIcon(getClass().getResource("images\\bush.gif"));
+                ImageIcon blankSpaceDefault = new ImageIcon(getClass().getResource("images\\empty.gif"));
                 return blankSpaceDefault;
         }
     }
@@ -549,7 +549,30 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_levelComboBoxActionPerformed
 
     private void startGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameButtonActionPerformed
-        // TODO add your handling code here:
+        if(this.startGameButton.getText() == "Play Again") {
+            this.world.randomWorld();
+            this.showWorld(world);
+            this.userPoints = 0;
+            this.machinePoints = 0;
+            this.humanPointsLabel.setText("0");
+            this.machinePointsLabel.setText("0");
+            this.startGameButton.setText("Start Game");
+            this.levelComboBox.setEnabled(true);
+        } else {
+            if(this.levelComboBox.getSelectedItem() == "Beginner") {
+                this.maxDepthSetByUser = 2;
+                this.machineMove();
+            } else if(this.levelComboBox.getSelectedItem() == "Amateur") {
+                this.maxDepthSetByUser = 4;
+                this.machineMove();
+            } else if(this.levelComboBox.getSelectedItem() == "Expert") {
+                this.maxDepthSetByUser = 6;
+                this.machineMove();
+            }
+            
+            this.levelComboBox.setEnabled(false);
+            this.startGameButton.setEnabled(false);
+        }
     }//GEN-LAST:event_startGameButtonActionPerformed
 
     private void humanPointsLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_humanPointsLabelActionPerformed
@@ -560,37 +583,6 @@ public class View extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_machinePointsLabelActionPerformed
 
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new View().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel dashboardPanel;
