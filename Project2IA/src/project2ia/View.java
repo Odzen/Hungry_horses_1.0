@@ -340,6 +340,8 @@ public class View extends javax.swing.JFrame {
         // And the new position to 1 which represents the user
         this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()] = 1;
         this.world.getMatrix()[userPosition.getX()][userPosition.getY()] = 0;
+        
+        this.showWorld(world);
 
         // Deactivate all buttons
         this.deactivateButtons();
