@@ -275,7 +275,7 @@ public class View extends javax.swing.JFrame {
         int oneStepRight = userPosition.getX() + 1;
         int oneStepDown = userPosition.getY() + 1;
         int oneStepUp = userPosition.getY() - 1;
-        int oneStepLeft = userPosition.getY() - 1;
+        int oneStepLeft = userPosition.getX() - 1;
 
         if (twoStepsRight < this.world.getWidth() && oneStepUp >= 0 && (this.world.isThereAnyHorse(twoStepsRight, oneStepUp) == false)) {
             Coordinate twoRightOneUp = new Coordinate(twoStepsRight, oneStepUp);
