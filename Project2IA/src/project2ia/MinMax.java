@@ -14,6 +14,8 @@ public class MinMax {
         root.setType(TypeNodeMinMax.MAX);
         this.maxDepth = maxDepth;
         tree.add(root);
+        //System.out.println("World Node: ");
+        root.getWorld().printWorld();
     }
     
     public Node max(Vector<Node> vector) {
@@ -44,8 +46,11 @@ public class MinMax {
     
     public void buildTree() {
         int position = 0;
+        //System.out.println("Max Depth: " + this.maxDepth);
         
         while(this.tree.get(position).getDepth() < this.maxDepth) {
+            //System.out.println("Current depth, building tree: "+ this.tree.get(position).getDepth());
+            
             Vector<Node> children;
             if(this.tree.get(position).getDepth() % 2 == 0)
                 children = this.tree.get(position).possibleMoves(TypePlayer.MACHINE);
@@ -55,7 +60,7 @@ public class MinMax {
             for(int i = 0; i < children.size() ; i++) {
                 tree.add(children.get(i));
             }
-            position+=1;
+            position++;
         }
     }
     

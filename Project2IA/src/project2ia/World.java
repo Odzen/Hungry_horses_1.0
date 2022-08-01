@@ -7,7 +7,7 @@ import java.util.Random;
 4 -> Grass
 5 -> Apple
  */
-public class World {
+public class World{
 
     static final int QTY_GRASS = 14;
     static final int QTY_FLOWERS = 5;
@@ -23,6 +23,13 @@ public class World {
         this.width = width;
         this.height = height;
         this.matrix = new int[width][height];
+    }
+    
+    public World(World world) {
+        this.totalQtyItems = QTY_GRASS + QTY_FLOWERS + QTY_APPLES;
+        this.width = world.getWidth();
+        this.height = world.getHeight();
+        this.matrix = world.getMatrix();
     }
 
     public int getWidth() {
@@ -131,8 +138,7 @@ public class World {
                 this.matrix[blackHorseX][blackHorseY] = 1;
                 isMissingBlackHorse = false;
             }
-        }
-                  
+        }                  
     }
 
     // Cosindering that 1 -> Player horse, and 2 -> Machine horse
