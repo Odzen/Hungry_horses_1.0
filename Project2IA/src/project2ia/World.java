@@ -7,7 +7,7 @@ import java.util.Random;
 4 -> Grass
 5 -> Apple
  */
-public class World  implements Cloneable{
+public class World{
 
     static final int QTY_GRASS = 14;
     static final int QTY_FLOWERS = 5;
@@ -158,12 +158,4 @@ public class World  implements Cloneable{
             System.out.println();
         }
     }
-    
-    
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-	World cloned = (World)super.clone();
-	cloned.setMatrix(cloned.getMatrix().clone());
-	return cloned;
-}
 }

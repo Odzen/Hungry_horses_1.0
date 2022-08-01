@@ -83,8 +83,8 @@ public class Node {
 
     public Vector<Node> possibleMoves(TypePlayer playerType) {
         Coordinate playerPosition = new Coordinate();
-        System.out.println("Possible Moves Machine");
-        this.getWorld().printWorld();
+        //System.out.println("Possible Moves Machine");
+        //this.getWorld().printWorld();
 
         if (playerType.equals(TypePlayer.USER)) {
             for (int i = 0; i < this.getWorld().getWidth(); i++) {
@@ -92,7 +92,7 @@ public class Node {
                     if (this.getWorld().getMatrix()[i][j] == 1) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
-                        System.out.println("USER:" + i + "," + j);
+                        //System.out.println("USER:" + i + "," + j);
                     }
                 }
             }
@@ -102,7 +102,7 @@ public class Node {
                     if (this.getWorld().getMatrix()[i][j] == 2) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
-                        System.out.println("MACHINE:" + i + "," + j);
+                        //System.out.println("MACHINE:" + i + "," + j);
                     }
                 }
             }
