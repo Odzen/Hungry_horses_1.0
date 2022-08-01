@@ -82,25 +82,25 @@ public class View extends javax.swing.JFrame {
     public ImageIcon paintElements(int element) {
         switch (element) {
             case 0:
-                ImageIcon blankSpace = new ImageIcon(getClass().getResource("img\\empty.gif"));
+                ImageIcon blankSpace = new ImageIcon(getClass().getClassLoader().getResource("empty.gif"));
                 return blankSpace;
             case 1:
-                ImageIcon userBlackHorse = new ImageIcon(getClass().getResource("img\\blackHorse.png"));
+                ImageIcon userBlackHorse = new ImageIcon(getClass().getClassLoader().getResource("blackHorse.png"));
                 return userBlackHorse;
             case 2:
-                ImageIcon machineWhiteHorse = new ImageIcon(getClass().getResource("img\\whiteHorse.png"));
+                ImageIcon machineWhiteHorse = new ImageIcon(getClass().getClassLoader().getResource("whiteHorse.png"));
                 return machineWhiteHorse;
             case 3:
-                ImageIcon flower = new ImageIcon(getClass().getResource("img\\flower.png"));
+                ImageIcon flower = new ImageIcon(getClass().getClassLoader().getResource("flower.png"));
                 return flower;
             case 4:
-                ImageIcon grass = new ImageIcon(getClass().getResource("img\\grass.png"));
+                ImageIcon grass = new ImageIcon(getClass().getClassLoader().getResource("grass.png"));
                 return grass;
             case 5:
-                ImageIcon apple = new ImageIcon(getClass().getResource("img\\apple.png"));
+                ImageIcon apple = new ImageIcon(getClass().getClassLoader().getResource("apple.png"));
                 return apple;
             default:
-                ImageIcon blankSpaceDefault = new ImageIcon(getClass().getResource("img\\empty.gif"));
+                ImageIcon blankSpaceDefault = new ImageIcon(getClass().getClassLoader().getResource("empty.gif"));
                 return blankSpaceDefault;
         }
     }
