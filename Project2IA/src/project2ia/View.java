@@ -69,8 +69,6 @@ public class View extends javax.swing.JFrame {
     }
 
     public void showWorld(World world) {
-        //System.out.println("Showing World: ");
-        //world.printWorld();
         int positionButton = 0;
         for (int row = 0; row < world.getMatrix().length; row++) {
             for (int column = 0; column < world.getMatrix()[row].length; column++) {
@@ -108,7 +106,6 @@ public class View extends javax.swing.JFrame {
     }
 
     public void setPointsByPosition(int buttonPositionWorld, TypePlayer playerType) {
-        // If the next button is a flower
         if (buttonPositionWorld == 3) {
             if (playerType.equals(TypePlayer.MACHINE)) {
                 this.machinePoints += 3;
@@ -116,7 +113,6 @@ public class View extends javax.swing.JFrame {
                 this.userPoints += 3;
             }
         }
-        // If the next button is grass
         if (buttonPositionWorld == 4) {
             if (playerType.equals(TypePlayer.MACHINE)) {
                 this.machinePoints++;
@@ -124,7 +120,6 @@ public class View extends javax.swing.JFrame {
                 this.userPoints++;
             }
         }
-        // If the next button is an apple
         if (buttonPositionWorld == 5) {
             if (playerType.equals(TypePlayer.MACHINE)) {
                 this.machinePoints += 5;
@@ -142,8 +137,6 @@ public class View extends javax.swing.JFrame {
         }
     }
 
-    // Checks if the game isn't over yet. The game is still on, while any items still left in the world
-    // If not, there is no move to make for any of the players
     public boolean areStillAnyItemsInWorld() {
         boolean itemsInWorld = false;
         for (int row = 0; row < this.world.getWidth(); row++) {
@@ -170,14 +163,11 @@ public class View extends javax.swing.JFrame {
     }
 
     public void activateButtonsForPossibleMoves(Vector<Coordinate> possibleMoves) {
-        System.out.println("Activate Buttons");
         for (int move = 0; move < possibleMoves.size(); move++) {
             int buttonId = 0;
             for (int row = 0; row < this.world.getWidth(); row++) {
                 for (int column = 0; column < this.world.getHeight(); column++) {
                     if (possibleMoves.get(move).getX() == row && possibleMoves.get(move).getY() == column) {
-                        System.out.println("Possible Move:" + possibleMoves.get(move).getX() + "," + possibleMoves.get(move).getY());
-                        System.out.println("Button id:" + buttonId);
                         this.dashboardPanel.getComponent(buttonId).setEnabled(true);
                     }
                     buttonId++;
@@ -195,45 +185,22 @@ public class View extends javax.swing.JFrame {
         Node rootNode = new Node();
         rootNode.setHumanPoints(this.userPoints);
         rootNode.setMachinePoints(this.machinePoints);
-
-        //System.out.println("World before sending to Node: ");
         rootNode.setWorld(this.world);
-
         MinMax minMax = new MinMax(rootNode, this.maxDepthSetByUser);
-        //System.out.println("WORLD before minmax decision: ");
-        //this.world.printWorld();
-
-        // Next move
         Coordinate coordinateMachineMove = minMax.move();
-
-        System.out.println("MINMAX Decision: (" + coordinateMachineMove.getX() + " , " + coordinateMachineMove.getY() + ")");
-        //System.out.println("WORLD after minmax decision: ");
-        //this.world.printWorld();
-
-        // Finds the current machine-player coordinate in the world, to then, set it
         Coordinate machinePosition = new Coordinate();
         for (int row = 0; row < this.world.getWidth(); row++) {
             for (int column = 0; column < this.world.getHeight(); column++) {
                 if (this.world.getMatrix()[row][column] == 2) {
-                    //System.out.println("Found Machine!!");
                     machinePosition.setX(row);
                     machinePosition.setY(column);
                 }
             }
         }
 
-        // Set points according to the next position where the machine player wants to move next
         this.setPointsByPosition(this.world.getMatrix()[coordinateMachineMove.getX()][coordinateMachineMove.getY()], TypePlayer.MACHINE);
-
-        //System.out.println("WORLD before setting positions: ");
-        //this.world.printWorld();
-        // Set positions next move and previous position
         this.world.getMatrix()[coordinateMachineMove.getX()][coordinateMachineMove.getY()] = 2;
         this.world.getMatrix()[machinePosition.getX()][machinePosition.getY()] = 0;
-
-        //System.out.println("WORLD after setting positions: ");
-        //this.world.printWorld();
-
         this.showWorld(this.world);
 
         if (!this.areStillAnyItemsInWorld()) {
@@ -241,8 +208,6 @@ public class View extends javax.swing.JFrame {
         } else {
             this.userCheckMoves();
         }
-         
-
     }
 
     public Vector<Coordinate> possibleMovesUser() {
@@ -311,7 +276,6 @@ public class View extends javax.swing.JFrame {
         int buttonId = Integer.parseInt(event.getActionCommand());
         int iteratorButtonId = 0;
 
-        // Finds the coordinate of that specific button when the action is performed
         for (int row = 0; row < this.world.getWidth(); row++) {
             for (int column = 0; column < this.world.getHeight(); column++) {
                 if (iteratorButtonId == buttonId) {
@@ -321,12 +285,11 @@ public class View extends javax.swing.JFrame {
                 iteratorButtonId++;
             }
         }
-
-        // Set points according to the button where the user player wants to move next
+        
         this.setPointsByPosition(this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()], TypePlayer.USER);
-
-        // Finds the current user-player coordinate in the world, to then, set it
+        
         Coordinate userPosition = new Coordinate();
+        
         for (int row = 0; row < this.world.getWidth(); row++) {
             for (int column = 0; column < this.world.getHeight(); column++) {
                 if (this.world.getMatrix()[row][column] == 1) {
@@ -336,17 +299,12 @@ public class View extends javax.swing.JFrame {
             }
         }
 
-        // Show moves in the view, sets the previous user position to 0
-        // And the new position to 1 which represents the user
         this.world.getMatrix()[buttonCoordinate.getX()][buttonCoordinate.getY()] = 1;
         this.world.getMatrix()[userPosition.getX()][userPosition.getY()] = 0;
         
         this.showWorld(world);
-
-        // Deactivate all buttons
         this.deactivateButtons();
 
-        // Check if someone won, if not, let the machine play
         if (!this.areStillAnyItemsInWorld()) {
             this.whoWon();
         } else {
@@ -441,7 +399,7 @@ public class View extends javax.swing.JFrame {
         jLabel9.setText("Flower: 3 points");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel10.setText("Statistics:");
+        jLabel10.setText("Information:");
 
         jLabel11.setText("Apple:  5 points");
 
@@ -453,15 +411,13 @@ public class View extends javax.swing.JFrame {
         menuPanelLayout.setHorizontalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel3)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addContainerGap()
                 .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel5)
                     .addGroup(menuPanelLayout.createSequentialGroup()
                         .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
+                        .addGap(31, 31, 31)
                         .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel8)
@@ -469,65 +425,58 @@ public class View extends javax.swing.JFrame {
                         .addGap(34, 34, 34)
                         .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
-                            .addComponent(jLabel4))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel4))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                .addGap(0, 3, Short.MAX_VALUE)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(startGameButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
+            .addGroup(menuPanelLayout.createSequentialGroup()
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel3))
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(machinePointsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                             .addComponent(humanPointsLabel))
                         .addGap(38, 38, 38)
                         .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
-                            .addComponent(jLabel6))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel12)
-                        .addGap(18, 18, 18)
-                        .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57)
-                        .addComponent(startGameButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))))
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel6))))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         menuPanelLayout.setVerticalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(24, 24, 24)
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(23, 23, 23)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7))
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addComponent(machinePointsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(humanPointsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(machinePointsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(humanPointsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addGap(27, 27, 27)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)

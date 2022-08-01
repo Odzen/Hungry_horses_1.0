@@ -1,12 +1,6 @@
 package project2ia;
 import java.util.Random;
-/*
-1 -> Player 1 = User
-2 -> Player 2 = Machine
-3 -> Flower
-4 -> Grass
-5 -> Apple
- */
+
 public class World{
 
     static final int QTY_GRASS = 14;
@@ -73,14 +67,12 @@ public class World{
         int blackHorseX = 0;
         int blackHorseY = 0;
         
-        // Set 0
         for (int row = 0; row < this.width; row++) {
             for (int column = 0; column < this.height; column++) {
                 this.matrix[row][column] = 0;
             }
         }
         
-        // Locate grass
         int countGrass = 0;
         while(countGrass < QTY_GRASS) {
             itemPositionX = (int) (random.nextDouble() * this.width);
@@ -92,7 +84,6 @@ public class World{
             }
         }
         
-        // Locate flowers
         int countFlowers = 0;
         while(countFlowers < QTY_FLOWERS) {
             itemPositionX = (int) (random.nextDouble() * this.width);
@@ -104,7 +95,6 @@ public class World{
             }
         }
         
-        // Locate apples
         int countApples = 0;
         while(countApples < QTY_APPLES) {
             itemPositionX = (int) (random.nextDouble() * this.width);
@@ -116,7 +106,6 @@ public class World{
             }
         }
         
-        // Locate white horse
         boolean isMissingWhiteHorse = true;
         while(isMissingWhiteHorse) {
             whiteHorseX = (int) (random.nextDouble() * this.width);
@@ -128,7 +117,6 @@ public class World{
             }
         }
         
-        // Locate black horse
         boolean isMissingBlackHorse = true;
         while(isMissingBlackHorse) {
             blackHorseX = (int) (random.nextDouble() * this.width);
@@ -141,7 +129,6 @@ public class World{
         }                  
     }
 
-    // Cosindering that 1 -> Player horse, and 2 -> Machine horse
     public boolean isThereAnyHorse(int x, int y) {
         if (this.getMatrix()[x][y] == 1 || this.getMatrix()[x][y] == 2) {
             return true;
