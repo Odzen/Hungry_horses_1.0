@@ -1,6 +1,12 @@
 package project2ia;
 import java.util.Random;
-
+/*
+1 -> Player 1 = User
+2 -> Player 2 = Machine
+3 -> Flower
+4 -> Grass
+5 -> Apple
+ */
 public class World{
 
     static final int QTY_GRASS = 14;
