@@ -47,24 +47,18 @@ public class Node {
         if (playerType.equals(TypePlayer.MACHINE)) {
             if (childNode.getWorld().getMatrix()[x][y] == 3) {
                 childNode.setMachinePoints(this.getMachinePoints() + 3);
-                // rest total qty of items by 1
             } else if (childNode.getWorld().getMatrix()[x][y] == 4) {
                 childNode.setMachinePoints(this.getMachinePoints() + 1);
-                // rest total qty of items by 1
             } else if (childNode.getWorld().getMatrix()[x][y] == 5) {
                 childNode.setMachinePoints(this.getMachinePoints() + 5);
-                // rest total qty of items by 1
             }
         } else {
             if (childNode.getWorld().getMatrix()[x][y] == 3) {
                 childNode.setHumanPoints(this.getHumanPoints() + 3);
-                // rest total qty of items by 1
             } else if (childNode.getWorld().getMatrix()[x][y] == 4) {
                 childNode.setHumanPoints(this.getHumanPoints() + 1);
-                // rest total qty of items by 1
             } else if (childNode.getWorld().getMatrix()[x][y] == 5) {
                 childNode.setHumanPoints(this.getHumanPoints() + 5);
-                // rest total qty of items by 1
             }
         }
 
@@ -83,8 +77,6 @@ public class Node {
 
     public Vector<Node> possibleMoves(TypePlayer playerType) {
         Coordinate playerPosition = new Coordinate();
-        //System.out.println("Possible Moves Machine");
-        //this.getWorld().printWorld();
 
         if (playerType.equals(TypePlayer.USER)) {
             for (int i = 0; i < this.getWorld().getWidth(); i++) {
@@ -92,7 +84,6 @@ public class Node {
                     if (this.getWorld().getMatrix()[i][j] == 1) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
-                        //System.out.println("USER:" + i + "," + j);
                     }
                 }
             }
@@ -102,7 +93,6 @@ public class Node {
                     if (this.getWorld().getMatrix()[i][j] == 2) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
-                        //System.out.println("MACHINE:" + i + "," + j);
                     }
                 }
             }
