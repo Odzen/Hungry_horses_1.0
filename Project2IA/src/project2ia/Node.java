@@ -85,14 +85,14 @@ public class Node {
         Coordinate playerPosition = new Coordinate();
         System.out.println("Possible Moves Machine");
         this.getWorld().printWorld();
-        
+
         if (playerType.equals(TypePlayer.USER)) {
             for (int i = 0; i < this.getWorld().getWidth(); i++) {
                 for (int j = 0; j < this.getWorld().getHeight(); j++) {
                     if (this.getWorld().getMatrix()[i][j] == 1) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
-                        System.out.println("USER:" + i +","+ j);
+                        System.out.println("USER:" + i + "," + j);
                     }
                 }
             }
@@ -102,7 +102,7 @@ public class Node {
                     if (this.getWorld().getMatrix()[i][j] == 2) {
                         playerPosition.setX(i);
                         playerPosition.setY(j);
-                        System.out.println("MACHINE:" + i +","+ j);
+                        System.out.println("MACHINE:" + i + "," + j);
                     }
                 }
             }
@@ -143,7 +143,7 @@ public class Node {
         if (twoStepsLeft >= 0 && oneStepDown < this.getWorld().getHeight() && (this.getWorld().isThereAnyHorse(twoStepsLeft, oneStepDown) == false)) {
             possibleMoves.add(this.addChild(twoStepsLeft, oneStepDown, playerType));
         }
-        
+
         return possibleMoves;
 
     }
@@ -209,6 +209,10 @@ public class Node {
     }
 
     public void setWorld(World newWorld) {
-        this.world = newWorld;
+        for (int row = 0; row < newWorld.getMatrix().length; row++) {
+            for (int column = 0; column < newWorld.getMatrix().length; column++) {
+                this.world.getMatrix()[row][column] = newWorld.getMatrix()[row][column];
+            }
+        }
     }
 }

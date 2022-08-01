@@ -204,7 +204,7 @@ public class View extends javax.swing.JFrame {
 
             System.out.println("World before sending to Node: ");
             //clonedWorld.printWorld();
-            rootNode.setWorld(clonedWorld);
+            rootNode.setWorld(this.world);
 
             MinMax minMax = new MinMax(rootNode, this.maxDepthSetByUser);
             System.out.println("WORLD before minmax decision: ");
@@ -235,8 +235,8 @@ public class View extends javax.swing.JFrame {
             System.out.println("WORLD before setting positions: ");
             this.world.printWorld();
             // Set positions next move and previous position
-            //this.world.getMatrix()[coordinateMachineMove.getX()][coordinateMachineMove.getY()] = 2;
-            //this.world.getMatrix()[machinePosition.getX()][machinePosition.getY()] = 0;
+            this.world.getMatrix()[coordinateMachineMove.getX()][coordinateMachineMove.getY()] = 2;
+            this.world.getMatrix()[machinePosition.getX()][machinePosition.getY()] = 0;
 
             System.out.println("WORLD after setting positions: ");
             this.world.printWorld();
