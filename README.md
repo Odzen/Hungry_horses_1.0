@@ -11,8 +11,8 @@ Remember that the horse moves are exactly the same as the ones used in chess.
 
 ## Made by:
 
-Juan David Tello
-Leidy Johanna Rivera
-Juan Sebastian Velasquez
+Juan David Tello - `@juanchotello98`
+Leidy Johanna Rivera - 
+Juan Sebastian Velasquez - `@Odzen`
 
 ## Demo
