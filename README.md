@@ -1,6 +1,26 @@
 # Hungry_horses_1.0
-Hungry horses 1.0 es un juego de dos adversarios. Cada uno controla un caballo sobre un tablero de ajedrez. En el tablero hay 14 casillas con césped, 5 con flores, y 2 con manzanas. Cuando un caballo se come un césped gana un punto, cuando se come una flor gana tres puntos, y cuando se come una manzana gana cinco puntos. Gana el juego quien obtenga más puntos.
-Made by:
-Juan David Tello - 2110001
-Leidy Johanna Rivera - 2024011
-Juan Sebastian Velasquez - 1744936
+
+Hungry horses 1.0 is a game of two opponents. Each one controls a horse on a chessboard. On the board, there are 14 squares with grass, 5 with flowers, and 2 with apples.
+
+When a horse eats a lawn he earns one point, when he eats a flower he makes three points, and when he eats an apple he earns five points. Whoever gets the most points wins the game. Hungry horses 1.0 features three levels of difficulty, beginner, amateur and expert, which the user can select when starting the game.
+
+## Players
+- User -> Black horse
+- Machine -> White horse
+
+Remember that the horse moves are exactly the same as the ones used in chess.
+
+## To play
+
+Go to releases and download the executable file with the extension `.jar` file for free!!
+
+
+## Demo
+
+![horsesGame](https://user-images.githubusercontent.com/49286935/182283244-75e289eb-a0ff-439e-be5b-665220f59d67.png)
+
+## Made by:
+
+- [Juan David Tello](https://github.com/juanchotello98)
+- [Leidy Johanna Rivera](https://github.com/LeidyJr)
+- [Juan Sebastian Velasquez](https://github.com/Odzen)
