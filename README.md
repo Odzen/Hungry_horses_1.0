@@ -11,8 +11,10 @@ Remember that the horse moves are exactly the same as the ones used in chess.
 
 ## Made by:
 
-[Juan David Tello](https://github.com/juanchotello98)
-Leidy Johanna Rivera - 
-Juan Sebastian Velasquez - `@Odzen`
+- [Juan David Tello](https://github.com/juanchotello98)
+- [Leidy Johanna Rivera](https://github.com/LeidyJr)
+- [Juan Sebastian Velasquez](https://github.com/Odzen)
 
 ## Demo
+
+![horsesGame](https://user-images.githubusercontent.com/49286935/182283244-75e289eb-a0ff-439e-be5b-665220f59d67.png)
