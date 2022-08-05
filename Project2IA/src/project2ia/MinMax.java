@@ -63,7 +63,8 @@ public class MinMax {
     public void calculateInitialHerusticDeepestNodes() {
         for (int position = 0; position < this.tree.size() ; position++) {
             if(this.tree.get(position).getDepth() == this.maxDepth) {
-                this.tree.get(position).setHeuristic(this.tree.get(position).getMachinePoints() - this.tree.get(position).getHumanPoints());
+                //this.tree.get(position).setHeuristic( (this.tree.get(position).getMachinePoints() - this.tree.get(position).getHumanPoints()) * this.tree.get(position).getDepth());
+                this.tree.get(position).setHeuristic( this.tree.get(position).getMachinePoints() - this.tree.get(position).getHumanPoints());
                 this.tree.get(position).getFather().getChildren().add(this.tree.get(position));
             }
         }
@@ -79,7 +80,7 @@ public class MinMax {
                         this.tree.get(position).setHeuristic(this.min(this.tree.get(position).getChildren()).getHeuristic());
                     } else if(this.tree.get(position).getType().equals(TypeNodeMinMax.MAX)) {
                         this.tree.get(position).getFather().getChildren().add(this.tree.get(position));
-                        this.tree.get(position).setHeuristic(this.max(this.tree.get(position).getChildren()).getHeuristic());
+                        this.tree.get(position).setHeuristic(this.max(this.tree.get(position).getChildren()).getHeuristic() * currentDepth);
                     }
                 }
             }
